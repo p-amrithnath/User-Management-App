@@ -1,0 +1,11 @@
+
+.i-wrap{
+    display: flex;
+    justify-content: space-between;
+    background-color: #eeeeee;
+}
+
+.col-md-6 .button {
+    display: flex;
+    justify-content: space-between;
+}
