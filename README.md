@@ -47,8 +47,8 @@ ________________________________________
 •	Role-based access control (e.g., admin vs regular user)
 •	Search/filter functionality in the user list
 •	Toast notifications for login status and errors
-
-* Some Additions : Include Edit and Delete in the state .
+•	Include Edit and Delete in the state
+•	Make API calls within Redux slices
 
 1. Get User List
 Endpoint:
