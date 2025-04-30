@@ -48,6 +48,8 @@ ________________________________________
 •	Search/filter functionality in the user list
 •	Toast notifications for login status and errors
 
+* Some Additions : Include Edit and Delete in the state .
+
 1. Get User List
 Endpoint:
 bash
