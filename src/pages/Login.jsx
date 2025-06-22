@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState } from "react";
 import {
   MDBBtn,
   MDBContainer,
@@ -10,37 +10,36 @@ import {
 } from "mdb-react-ui-kit";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchEmployees} from "../redux/features/employeesSlice";
-import { fetchprofile } from "../redux/features/profileSlice"; 
+import { useGetEmployeeByIdQuery } from "../services/employee";
 
 function Login() {
-  const { employees, loading, error } = useSelector((state) =>  state.employees);
-  const dispatch = useDispatch();
-  const [employeeDetails, setEmployeeDetails] = useState({});
+  const [associateId, setAssociateId] = useState("");
   const navigate = useNavigate();
-
-  useEffect(() => {
-    dispatch(fetchEmployees());
-  }, [dispatch]);
+  const {
+    data: profile,
+    error: profileError,
+    isLoading,
+  } = useGetEmployeeByIdQuery(associateId, {
+    skip: !associateId,
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const assosciateId = e.target.elements.form1.value;
-    if (assosciateId) {
-      dispatch(fetchprofile(assosciateId))
-        .unwrap()
-        .then(() => {
-          navigate("/employees", {state:{ employees, loading, error }});
-          toast.success("Login Successfully !");
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-          toast.error(" Assosciate ID not found");
-        });
-      console.log(employeeDetails);
+    const id = e.target.elements.form1.value;
+    setAssociateId(id);
+
+    if (id) {
+      if (isLoading) {
+        toast.info("Loading...");
+      } else if (profile) {
+        navigate("/employees");
+        toast.success("Login Successfully!");
+      } else if (profileError) {
+        console.error("Error fetching data:", profileError);
+        toast.error("Associate ID not found");
+      }
     } else {
-      toast.error("Please enter a valid Assosciate ID");
+      toast.error("Please enter a valid Associate ID");
     }
   };
 
@@ -59,7 +58,7 @@ function Login() {
           <p className="px-3" style={{ color: "hsl(217, 10%, 50.8%)" }}>
             Simplify your user management process. Our system offers powerful
             tools to help you organize and support your team, ensuring everyone
-            stays connected and productive
+            stays connected and productive.
           </p>
         </MDBCol>
 
@@ -73,7 +72,7 @@ function Login() {
               <form onSubmit={handleSubmit}>
                 <MDBInput
                   wrapperClass="mb-4"
-                  label="Assosciate ID"
+                  label="Associate ID"
                   id="form1"
                   type="text"
                 />

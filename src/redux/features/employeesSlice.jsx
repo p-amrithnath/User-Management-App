@@ -1,19 +1,11 @@
-import axios from "axios";
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+import { employeeApi } from "../../services/employee";
 
 const initialState = {
   loading: false,
   employees: [],
   error: "",
 };
-
-export const fetchEmployees = createAsyncThunk(
-  "employee/fetchEmployees",
-  async () => {
-    const response = await axios.get("https://gorest.co.in/public/v2/users");
-    return response.data;
-  }
-);
 
 const employeeSlice = createSlice({
   name: "employees",
@@ -34,22 +26,30 @@ const employeeSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchEmployees.pending, (state) => {
-      state.loading = true;
-    });
-    builder.addCase(fetchEmployees.fulfilled, (state, action) => {
-      state.loading = false;
-      state.employees = action.payload;
-      state.error = "";
-    });
-    builder.addCase(fetchEmployees.rejected, (state, action) => {
-      state.loading = false;
-      state.employees = [];
-      state.error = action.error.message;
-    });
+    builder.addMatcher(
+      employeeApi.endpoints.getEmployeeById.matchPending,
+      (state) => {
+        state.loading = true;
+      }
+    );
+    builder.addMatcher(
+      employeeApi.endpoints.getAllEmployees.matchFulfilled,
+      (state, action) => {
+        state.loading = false;
+        state.employees = action.payload;
+        state.error = "";
+      }
+    );
+    builder.addMatcher(
+      employeeApi.endpoints.getAllEmployees.matchRejected,
+      (state, action) => {
+        state.loading = false;
+        state.employees = [];
+        state.error = action.error.message;
+      }
+    );
   },
 });
-
 
 export const { deleteEmployee, editEmployee } = employeeSlice.actions;
 export default employeeSlice.reducer;

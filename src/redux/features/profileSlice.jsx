@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { employeeApi } from "../../services/employee";
+
 
 const initialState = {
   loading: false,
@@ -7,33 +9,34 @@ const initialState = {
   error: "",
 };
 
-export const fetchprofile = createAsyncThunk(
-  "employee/fetchProfile",
-  async (id) => {
-    const response = await axios.get(
-      `https://gorest.co.in/public/v2/users/${id}`
-    );
-    return response.data;
-  }
-);
-
 const profileSlice = createSlice({
   name: "profile",
   initialState,
   extraReducers: (builder) => {
-    builder.addCase(fetchprofile.pending, (state) => {
-      state.loading = true;
-    });
-    builder.addCase(fetchprofile.fulfilled, (state, action) => {
-      state.loading = false;
-      state.profile = action.payload;
-      state.error = "";
-    });
-    builder.addCase(fetchprofile.rejected, (state, action) => {
-      state.loading = false;
-      state.profile = {};
-      state.error = action.error.message;
-    });
+    builder.addMatcher(
+      employeeApi.endpoints.getEmployeeById.matchFulfilled,
+      (state, action) => {
+        state.loading = false;
+        state.profile = action.payload;
+        state.error = "";
+      }
+    );
+    builder.addMatcher(
+      employeeApi.endpoints.getEmployeeById.matchRejected,
+      (state, action) => {
+        state.loading = false;
+        state.profile = {};
+        state.error = action.error.message;
+      }
+    );
+    builder.addMatcher(
+      employeeApi.endpoints.getEmployeeById.matchPending,
+      (state, action) => {
+        state.loading = true;
+        state.profile = {};
+        state.error = "";
+      }
+    );
   },
 });
 

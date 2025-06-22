@@ -1,14 +1,18 @@
-import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { useSelector, useDispatch } from "react-redux";
-import { deleteEmployee } from "../redux/features/employeesSlice";
-import { toast } from "react-toastify";
-import "./List.css";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { useDispatch,useSelector  } from 'react-redux';
+import { deleteEmployee } from '../redux/features/employeesSlice';
+import { toast } from 'react-toastify';
+import { useGetAllEmployeesQuery } from '../services/employee';
+import './List.css';
 
 const List = () => {
-  const { employees, loading, error } = useSelector((state) => state.employees);
+  
+const { data: employeelist, isLoading , error } = useGetAllEmployeesQuery();
+const { employees, loading, error: reduxError } = useSelector((state) => state.employees);
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -24,7 +28,7 @@ const List = () => {
   };
 
   const faAlignCenter = {
-    textAlign: "center",
+    textAlign: 'center',
   };
 
   return (
@@ -35,8 +39,8 @@ const List = () => {
             <span className="sr-only">Loading...</span>
           </div>
         </div>
-      ) : error ? (
-        <p className="text-danger">{error}</p>
+      ) : reduxError ? (
+        <p className="text-danger">{reduxError}</p>
       ) : (
         <div>
           <h2 className="mb-4">Associate List</h2>
@@ -76,14 +80,14 @@ const List = () => {
                             },
                           })
                         }
-                        style={{ marginRight: "10px" }}
+                        style={{ marginRight: '10px' }}
                       >
                         <FontAwesomeIcon icon={faEye} />
                       </button>
                       <button
                         className="custom-button"
                         onClick={() => handleEdit(employee)}
-                        style={{ marginRight: "10px" }}
+                        style={{ marginRight: '10px' }}
                       >
                         <FontAwesomeIcon icon={faEdit} />
                       </button>

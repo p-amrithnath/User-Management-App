@@ -1,0 +1,169 @@
+{
+  counter: {
+    value: 0
+  },
+  employees: {
+    loading: false,
+    employees: [],
+    error: ''
+  },
+  profile: {
+    loading: false,
+    profile: {},
+    error: ''
+  },
+  employeeApi: {
+    queries: {
+      'getAllEmployees(undefined)': {
+        status: 'fulfilled',
+        endpointName: 'getAllEmployees',
+        requestId: 'QNOADOwK3lJ986LVHUlQ_',
+        startedTimeStamp: 1746441176514,
+        data: [
+          {
+            id: 7871904,
+            name: 'Mrs. Deeptimoy Iyengar',
+            email: 'deeptimoy_iyengar_mrs@nicolas.test',
+            gender: 'female',
+            status: 'inactive'
+          },
+          {
+            id: 7871903,
+            name: 'Bhagirathi Sharma',
+            email: 'bhagirathi_sharma@cummerata-okuneva.test',
+            gender: 'female',
+            status: 'active'
+          },
+          {
+            id: 7871902,
+            name: 'Mohana Nayar',
+            email: 'nayar_mohana@waelchi.test',
+            gender: 'male',
+            status: 'inactive'
+          },
+          {
+            id: 7871901,
+            name: 'Samir Banerjee',
+            email: 'banerjee_samir@jaskolski-stoltenberg.example',
+            gender: 'male',
+            status: 'inactive'
+          },
+          {
+            id: 7871899,
+            name: 'Diptendu Chopra',
+            email: 'chopra_diptendu@hermann.example',
+            gender: 'male',
+            status: 'active'
+          },
+          {
+            id: 7871898,
+            name: 'Mr. Bhardwaj Banerjee',
+            email: 'banerjee_mr_bhardwaj@stehr-olson.example',
+            gender: 'male',
+            status: 'active'
+          },
+          {
+            id: 7871897,
+            name: 'Smriti Desai',
+            email: 'smriti_desai@moen.example',
+            gender: 'female',
+            status: 'inactive'
+          },
+          {
+            id: 7871896,
+            name: 'Bhooshan Pandey Sr.',
+            email: 'bhooshan_pandey_sr@kulas-halvorson.example',
+            gender: 'female',
+            status: 'active'
+          },
+          {
+            id: 7871895,
+            name: 'Bandhu Ahuja',
+            email: 'ahuja_bandhu@mcglynn-klein.example',
+            gender: 'female',
+            status: 'active'
+          },
+          {
+            id: 7871894,
+            name: 'Amish Kakkar',
+            email: 'amish_kakkar@bernhard.example',
+            gender: 'female',
+            status: 'inactive'
+          }
+        ],
+        fulfilledTimeStamp: 1746441176751
+      }
+    },
+    mutations: {},
+    provided: {
+      tags: {},
+      keys: {
+        'getAllEmployees(undefined)': []
+      }
+    },
+    subscriptions: {},
+    config: {
+      online: true,
+      focused: false,
+      middlewareRegistered: true,
+      refetchOnFocus: false,
+      refetchOnReconnect: false,
+      refetchOnMountOrArgChange: false,
+      keepUnusedDataFor: 60,
+      reducerPath: 'employeeApi',
+      invalidationBehavior: 'delayed'
+    }
+  }
+}
+
+
+##################### ERROR ########################################
+
+{
+  counter: {
+    value: 0
+  },
+  employees: {
+    loading: false,
+    employees: [],
+    error: ''
+  },
+  profile: {
+    loading: false,
+    profile: {},
+    error: ''
+  },
+  employeeApi: {
+    queries: {
+      'getAllEmployees(undefined)': {
+        status: 'rejected',
+        endpointName: 'getAllEmployees',
+        requestId: 'aTb_SGTH9IbMdSpPNgPbQ',
+        startedTimeStamp: 1746441291339,
+        error: {
+          status: 'FETCH_ERROR',
+          error: 'TypeError: Failed to fetch'
+        }
+      }
+    },
+    mutations: {},
+    provided: {
+      tags: {},
+      keys: {
+        'getAllEmployees(undefined)': []
+      }
+    },
+    subscriptions: {},
+    config: {
+      online: false,
+      focused: true,
+      middlewareRegistered: true,
+      refetchOnFocus: false,
+      refetchOnReconnect: false,
+      refetchOnMountOrArgChange: false,
+      keepUnusedDataFor: 60,
+      reducerPath: 'employeeApi',
+      invalidationBehavior: 'delayed'
+    }
+  }
+}
