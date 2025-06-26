@@ -2,23 +2,28 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { useDispatch,useSelector  } from 'react-redux';
-import { deleteEmployee } from '../redux/features/employeesSlice';
 import { toast } from 'react-toastify';
-import { useGetAllEmployeesQuery } from '../services/employee';
+import {
+  useGetAllEmployeesQuery,
+  useDeleteEmployeeMutation,
+} from '../services/employee';
 import './List.css';
 
 const List = () => {
-  
-const { data: employeelist, isLoading , error } = useGetAllEmployeesQuery();
-const { employees, loading, error: reduxError } = useSelector((state) => state.employees);
-  
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleDelete = (id) => {
-    dispatch(deleteEmployee(id));
-    toast.success(`Employee ${id} deleted successfully!`);
+  const { data: employeelist, isLoading, error } = useGetAllEmployeesQuery();
+  const [deleteEmployeeMutation] = useDeleteEmployeeMutation();
+
+  const employees = employeelist || [];
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteEmployeeMutation(id).unwrap();
+      toast.success(`Employee ${id} deleted successfully!`);
+    } catch (err) {
+      toast.error(`Failed to delete employee ${id}: ${err?.data?.message || err.message}`);
+    }
   };
 
   const handleEdit = (employee) => {
@@ -27,24 +32,40 @@ const { employees, loading, error: reduxError } = useSelector((state) => state.e
     });
   };
 
+  const handleAdd = () => {
+    navigate(`/employees/details`, {
+      state: { edit: false, profile: false, view: false, add: true },
+    });
+  };
+  
+
   const faAlignCenter = {
     textAlign: 'center',
   };
 
   return (
     <div className="container mt-5">
-      {loading ? (
+      {isLoading ? (
         <div className="spinner-container">
           <div className="spinner-border text-primary" role="status">
             <span className="sr-only">Loading...</span>
           </div>
         </div>
-      ) : reduxError ? (
-        <p className="text-danger">{reduxError}</p>
-      ) : (
+      ) 
+      // : error ? (
+      //   <p className="text-danger">Error loading employees: {error.message}</p>
+      // )
+      
+      : (
         <div>
           <h2 className="mb-4">Associate List</h2>
           <hr />
+          <div className="mb-3 d-flex justify-content-end">
+  <button className="btn btn-primary" onClick={() => handleAdd()}>
+    ADD
+  </button>
+</div>
+
           <table className="table table-striped">
             <thead>
               <tr>
@@ -55,7 +76,7 @@ const { employees, loading, error: reduxError } = useSelector((state) => state.e
               </tr>
             </thead>
             <tbody>
-              {!employees || employees.length === 0 ? (
+              {employees.length === 0 ? (
                 <tr>
                   <td colSpan="4" style={faAlignCenter}>
                     No employees data.

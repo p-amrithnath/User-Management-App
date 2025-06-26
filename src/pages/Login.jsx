@@ -10,36 +10,41 @@ import {
 } from "mdb-react-ui-kit";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useGetEmployeeByIdQuery } from "../services/employee";
+import { useLoginMutation,useGetEmployeeByIdQuery } from "../services/employee"; // Use the login mutation
 
 function Login() {
-  const [associateId, setAssociateId] = useState("");
+  const [userName, setUserName] = useState("");
+  const [id,setId] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const {
-    data: profile,
-    error: profileError,
-    isLoading,
-  } = useGetEmployeeByIdQuery(associateId, {
-    skip: !associateId,
+  const [login, { isLoading }] = useLoginMutation(); // Use login mutation
+  const { data: employeeData } = useGetEmployeeByIdQuery(id, {
+    skip: !id,
+    refetchOnMountOrArgChange: true,
   });
-
-  const handleSubmit = (e) => {
+  
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const id = e.target.elements.form1.value;
-    setAssociateId(id);
+    const userName = e.target.elements.form1.value;
+    const password = e.target.elements.form2.value;
 
-    if (id) {
-      if (isLoading) {
-        toast.info("Loading...");
-      } else if (profile) {
-        navigate("/employees");
+    setUserName(userName);
+    setPassword(password);
+
+    if (userName && password) {
+      try {
+        const response = await login({ userName, password }).unwrap(); // Call login API
+        const userId = response.userId;
+        setId(userId); // Set the ID from the response
+        localStorage.setItem("jwtToken", response.token); // Store token in localStorage
         toast.success("Login Successfully!");
-      } else if (profileError) {
-        console.error("Error fetching data:", profileError);
-        toast.error("Associate ID not found");
+        navigate("/employees"); // Navigate to employees page
+      } catch (error) {
+        console.error("Login failed:", error);
+        toast.error("Invalid credentials. Please try again.");
       }
     } else {
-      toast.error("Please enter a valid Associate ID");
+      toast.error("Please enter valid login details.");
     }
   };
 
@@ -72,12 +77,23 @@ function Login() {
               <form onSubmit={handleSubmit}>
                 <MDBInput
                   wrapperClass="mb-4"
-                  label="Associate ID"
+                  label="Associate Name"
                   id="form1"
                   type="text"
                 />
-                <MDBBtn className="w-100 mb-4" size="md" type="submit">
-                  Login
+                <MDBInput
+                  wrapperClass="mb-4"
+                  label="Password"
+                  id="form2"
+                  type="password" // Use type="password" for security
+                />
+                <MDBBtn
+                  className="w-100 mb-4"
+                  size="md"
+                  type="submit"
+                  disabled={isLoading} // Disable button while loading
+                >
+                  {isLoading ? "Logging in..." : "Login"}
                 </MDBBtn>
               </form>
             </MDBCardBody>
